@@ -42,7 +42,7 @@ def _validate_data():
     with open(f"{DAG_FOLDER}/data.json", "r") as f:
         data = json.load(f)
 
-    assert data.get("status") is not "fail"
+    assert data.get("status") != "fail"
 
 def _create_weather_table():
     pg_hook = PostgresHook(
@@ -121,7 +121,7 @@ default_args = {
 with DAG(
     "AQI_DAGS",
     default_args=default_args,
-    schedule="1 * * * *",
+    schedule="25 * * * *",
     start_date=timezone.datetime(2025, 3, 24),
     tags=["dpu"],
 ):

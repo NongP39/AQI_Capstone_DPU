@@ -8,7 +8,7 @@ from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.utils import timezone
-
+import shutil
 import requests
 
 
@@ -37,12 +37,11 @@ def _get_weather_data():
     with open(f"{DAG_FOLDER}/data.json", "w") as f:
         json.dump(data, f)
 
-
 def _validate_data():
     with open(f"{DAG_FOLDER}/data.json", "r") as f:
         data = json.load(f)
 
-    assert data.get("status") is not "fail"
+    assert data.get("status") != "fail"
 
 def _create_weather_table():
     pg_hook = PostgresHook(
@@ -54,10 +53,10 @@ def _create_weather_table():
 
     sql = """
     CREATE TABLE IF NOT EXISTS AQI (
-        date VARCHAR,
-        time VARCHAR,
-        aqi NUMERIC NOT NULL,
-        temp NUMERIC NOT NULL,
+        date VARCHAR NOT NULL,
+        time VARCHAR NOT NULL,
+        aqi NUMERIC,
+        temp NUMERIC ,
         pressure NUMERIC,
         humidity NUMERIC,
         wind_speed NUMERIC, 
@@ -67,21 +66,6 @@ def _create_weather_table():
     cursor.execute(sql)
     connection.commit()
 
-
-import json
-from airflow.providers.postgres.hooks.postgres import PostgresHook
-from datetime import datetime
-
-def convert_date_string(date_string):
-    """แปลง date string 'YYYY-MM-DDTHH:MM:SS.000Z' เป็น 'DDMMYYYY'."""
-    dt_object = datetime.fromisoformat(date_string.replace("Z", "+00:00"))
-    return dt_object.strftime("%d%m%Y")
-
-def convert_to_1500(date_string):
-    """แปลง date string 'YYYY-MM-DDTHH:MM:SS.000Z' เป็น '1500' (UTC+7)."""
-    dt_object_utc = datetime.fromisoformat(date_string.replace("Z", "+00:00"))
-    dt_object_th = dt_object_utc + timedelta(hours=7)  # ปรับ time zone เป็น UTC+7
-    return dt_object_th.strftime("%H%M") # แปลงเป็น 1500
 
 def _load_data_to_postgres():
     pg_hook = PostgresHook(
@@ -94,10 +78,13 @@ def _load_data_to_postgres():
     with open(f"{DAG_FOLDER}/data.json", "r") as f:
         data = json.load(f)
 
-    date_raw = data["data"]["current"]["pollution"]["ts"]
-    date = convert_date_string(date_raw)
-    time_raw =  data["data"]["current"]["pollution"]["ts"]
-    time = convert_to_1500(time_raw)
+    timestamp_str =  data["data"]["current"]["pollution"]["ts"]
+    utc_datetime = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
+    thai_timedelta = timedelta(hours=7)
+    thai_datetime = utc_datetime + thai_timedelta
+
+    date = thai_datetime.strftime('%d%m%Y')
+    time = thai_datetime.strftime('%H%M')
     aqi = data["data"]["current"]["pollution"]["aqius"]
     temp = data["data"]["current"]["weather"]["tp"]
     pressure = data["data"]["current"]["weather"]["pr"]
@@ -109,7 +96,7 @@ def _load_data_to_postgres():
          INSERT INTO AQI (date, time, aqi, temp, pressure, humidity, wind_speed, wind_direction)
          VALUES ({date},{time},{aqi},{temp},{pressure},{humidity},{wind_speed},{wind_direction});
     """
-   
+    
     cursor.execute(sql)
     connection.commit()
 
@@ -121,7 +108,7 @@ default_args = {
 with DAG(
     "AQI_DAGS",
     default_args=default_args,
-    schedule="1 * * * *",
+    schedule="25 * * * *",
     start_date=timezone.datetime(2025, 3, 24),
     tags=["dpu"],
 ):
