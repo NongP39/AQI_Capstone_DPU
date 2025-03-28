@@ -1,2 +1,0 @@
-7b2991a3-cccc-4881-9ff7-2f9d9cf8b753
-curl --location -g 'http://api.airvisual.com/v2/states?country=China&key={{YOUR_API_KEY}}'
