@@ -23,7 +23,7 @@ humidity = data["data"]["current"]["weather"]["hu"]
 wind_speed = data["data"]["current"]["weather"]["ws"]
 wind_direction = data["data"]["current"]["weather"]["wd"]
 
-print(type(thai_date.strftime('%d-%m-%Y')))
-print(thai_date.strftime('%d-%m-%Y'))
-print(type(thai_time.strftime("%H%M")))
-print(thai_time.strftime("%H%M"))
+print(type(thai_date))
+print(thai_date)
+print(type(thai_time))
+print(thai_time)

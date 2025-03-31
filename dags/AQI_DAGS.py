@@ -65,17 +65,17 @@ def _create_weather_table():
 
     sql = """
     CREATE TABLE IF NOT EXISTS AQI (
-        date VARCHAR NOT NULL,
-        time VARCHAR NOT NULL,
-        aqi NUMERIC,
+        date DATE NOT NULL,
+        time TIME NOT NULL,
+        aqi NUMERIC NOT NULL,
         temp NUMERIC,
         pressure NUMERIC,
         humidity NUMERIC,
-        wind_speed NUMERIC, 
-        wind_direction NUMERIC 
+        wind_speed NUMERIC,
+        wind_direction NUMERIC
     );
 """
-# DAGS นี้เป็นการเก็บข้อมูล AQI จึงใส่ column AQI ให้เป็น NOT NULL
+    # DAGS นี้เป็นการเก็บข้อมูล AQI จึงใส่ column AQI ให้เป็น NOT NULL
     cursor.execute(sql)
     connection.commit()
 
@@ -91,26 +91,26 @@ def _load_data_to_postgres():
     with open(f"{DAG_FOLDER}/data.json", "r") as f:
         data = json.load(f)
 
-    timestamp_str =  data["data"]["current"]["pollution"]["ts"]
+    timestamp_str = data["data"]["current"]["pollution"]["ts"]
     utc_datetime = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
     thai_timedelta = timedelta(hours=7) #แปลงเวลา UTC ให้เป็น LOCALTIME (Bangkok: +7)
     thai_datetime = utc_datetime + thai_timedelta
-    #แปลง timestampe จาก type: DATETIME ให้เป็น String เพราะตอนลองใส่ด้วย type: DATE และ TIME แล้ว ไม่สามารถรัน code ผ่านได้ เนื่องจาก Error DATATYPE
-    date = thai_datetime.strftime('%d%m%Y')
-    time = thai_datetime.strftime('%H%M')
+    # แปลง datetime เป็น date และ time object
+    record_date = thai_datetime.date()
+    record_time = thai_datetime.time()
     aqi = data["data"]["current"]["pollution"]["aqius"]
     temp = data["data"]["current"]["weather"]["tp"]
     pressure = data["data"]["current"]["weather"]["pr"]
     humidity = data["data"]["current"]["weather"]["hu"]
     wind_speed = data["data"]["current"]["weather"]["ws"]
     wind_direction = data["data"]["current"]["weather"]["wd"]
-    
-    sql = f"""
-         INSERT INTO AQI (date, time, aqi, temp, pressure, humidity, wind_speed, wind_direction)
-         VALUES ({date},{time},{aqi},{temp},{pressure},{humidity},{wind_speed},{wind_direction});
+
+    sql = """
+        INSERT INTO AQI (date, time, aqi, temp, pressure, humidity, wind_speed, wind_direction)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
-    
-    cursor.execute(sql)
+
+    cursor.execute(sql, (record_date, record_time, aqi, temp, pressure, humidity, wind_speed, wind_direction))
     connection.commit()
 
 default_args = {
