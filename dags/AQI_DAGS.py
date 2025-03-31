@@ -16,9 +16,7 @@ DAG_FOLDER = "/opt/airflow/dags"
 
 
 def _get_weather_data():
-    #assert 1 == 2
-
-    # API_KEY = os.environ.get("WEATHER_API_KEY")
+    
     API_KEY = Variable.get("aqi_api_key")
 
     payload = {
@@ -44,8 +42,18 @@ def _get_weather_data():
 def _validate_data():
     with open(f"{DAG_FOLDER}/data.json", "r") as f:
         data = json.load(f)
-    aqi = data["data"]["current"]["pollution"]["aqius"]
-    assert data.get("aqi") != "NULL"
+    val = data["data"]["current"]
+    
+    if not val["pollution"]["aqius"] > 0: # ค่า AQI ไม่ต่ำกว่า 0
+            raise AssertionError("ข้อมูล AQI ผิดพลาด")
+    if not 1000 < val["weather"]["pr"] < 1200: # ค่าความกดอากาศไม่ต่ำกว่า 1000 และไม่สูงกว่า 1200 ในระดับพื้นผิว
+            raise AssertionError("ข้อมูลความกดอากาศผิดพลาด")
+    if not 0 < val["weather"]["tp"] < 45: # ค่าอุณหภูมิอากาศของกรุงเทพไม่มีต่ำกว่า 0 และไม่มีสูงกว่า 45 (แต่อาจจะ)
+            raise AssertionError("ข้อมูลอุณหภูมิผิดพลาด")
+    if not 0 < val["weather"]["hu"] < 100 : # ค่าความชื้นไม่ต่ำกว่า 0 และไม่เกิน 100
+            raise AssertionError("ข้อมูลความชื้นผิดพลาด")
+    if not 0 < val["weather"]["wd"] < 360 : # ทิศทางลม หน่วยเป็นองศา ค่าอยู่ระหว่าง 0 - 360
+            raise AssertionError("ข้อมูลทิศทางลมผิดพลาด")
     #จากทดลองรันแล้วไม่พบ API ที่มี status:success แต่ข้อมูลภายในมีค่าที่ผิดพลาด จึงเขียน code นี้เป็นตัวอย่างไปก่อน
 
 def _create_weather_table():
@@ -60,8 +68,8 @@ def _create_weather_table():
     CREATE TABLE IF NOT EXISTS AQI (
         date VARCHAR NOT NULL,
         time VARCHAR NOT NULL,
-        aqi NUMERIC NOT NULL,
-        temp NUMERIC ,
+        aqi NUMERIC,
+        temp NUMERIC,
         pressure NUMERIC,
         humidity NUMERIC,
         wind_speed NUMERIC, 
