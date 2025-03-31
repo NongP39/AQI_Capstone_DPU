@@ -11,7 +11,6 @@ from airflow.utils import timezone
 import shutil
 import requests
 
-thai_datetime = None
 DAG_FOLDER = "/opt/airflow/dags"
 
 
