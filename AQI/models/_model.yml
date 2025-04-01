@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: aqi_summary_by_time
+    description: ตารางสำหรับดูค่าคุณภาพอากาศ (สูงที่สุด,ต่ำที่สุด,ค่าเฉลี่ย) ตามช่วงเวลา
+    columns:
+      - name: time_group
+        description: ช่วงเวลาที่แบ่งเป็นช่วงๆ ช่วงละ 6 ชั่วโมง
+      - name: max_aqi
+        description: ค่าคุณภาพอากาศสูงที่สุดตามช่วงเวลานั้น
+      - name: min_aqi
+        description: ค่าคุณภาพอากาศต่ำที่สุดตามช่วงเวลานั้น
+      - name: avg_aqi
+        description: ค่าคุณภาพอากาศเฉลี่ยตามช่วงเวลานั้น
+  - name: avg_wind
+    description: ตารางดูทิศทางกระแสลมเฉลี่ย และความเร็วลมเฉลี่ย (m/s) รายชั่วโมง
+    columns:
+      - name: time
+        description: ช่วงเวลาทุก 1 ชั่วโมง
+      - name: avg_wind_speed
+        description: ความเร็วลมเฉลี่ย (m/s)
+      - name: wind_direction_degrees
+        description: ทิศทางกระแสลมเฉลี่ย (m/s)
+      - name: wind_direction
+        description: ทิศของกระแสลม (เข็มทิศ)
+  - name: high_aqi_top_5
+    description: ตารางแสดงข้อมูลที่มีค่าคุณภาพอากาศสูงที่่สุด 5 อันดับ
+    columns:
+      - name: date
+        description: วัน
+      - name: time
+        description: เวลา
+      - name: aqi
+        description: ค่าคุณภาพอากาศ
+      - name: temp
+        description: อุณหภูมิ
+      - name: pressure
+        description: ความกดอากาศ
+      - name: humidity
+        description: ความชื้น
+      - name: wind_speed
+        description: ความเร็วลม

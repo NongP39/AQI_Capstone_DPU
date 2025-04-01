@@ -33,7 +33,8 @@
 -
 -
 
-5.**DBT**
+5. **DBT**
+
 **หากต้องการรัน DBT ต้องย้าย directory บน terminal ไปที่ folder : AQI ก่อน **
 `$cd /AQI`
 
@@ -42,6 +43,13 @@
 -  **ข้อมูล Production** ไว้ที่ **schema : Production** ใช้สำหรับนำไปทำ Dashboard หรืออื่นๆ
 
 จากนั้นสร้างและเก็บ SQL statement เพื่อตอบคำถาม Bussiness Questions ไว้ที่ `/workspaces/DPU_Capstone/AQI/models`และทำการรันด้วยคำสั่ง `dbt run` เพื่อดึงข้อมูลด้วย SQL statement ขึ้นมาอยู่ในข้อมูลในส่วนของ process ก่อน เมื่อ**ตรวจสอบ/แก้ไข**ข้อมูลให้พร้อมที่จะนำไปใช้งานให้รันคำสั่ง `dbt run -t production`เพื่อดึงข้อมูลขึ้นไปบน Production
+
+
+dbt docs generate
+dbt docs serve --port 9090
+dbt test
+note
+สร้าง dbt เรียบร้อยสามารถเปิดเว็บได้แล้ว เป้าต่อไปทำ ใส่ description dbt, ทำคำถามที่เหลือ, อัดวิดีโอ, ทำ dashboard, export data ที่เก็บไว้เผื่อ...
 
 
 ชื่อ: นาย-------------- รหัสนิสิต: 67130---
