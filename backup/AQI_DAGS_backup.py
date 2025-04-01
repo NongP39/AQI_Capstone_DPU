@@ -8,17 +8,14 @@ from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.utils import timezone
-
+import shutil
 import requests
-
 
 DAG_FOLDER = "/opt/airflow/dags"
 
 
 def _get_weather_data():
-    #assert 1 == 2
-
-    # API_KEY = os.environ.get("WEATHER_API_KEY")
+    
     API_KEY = Variable.get("aqi_api_key")
 
     payload = {
@@ -36,13 +33,27 @@ def _get_weather_data():
 
     with open(f"{DAG_FOLDER}/data.json", "w") as f:
         json.dump(data, f)
-
+    
+    assert data.get("status") != "fail" 
+    #ใส่ไว้เพื่อเวลา API status:fail Airflow จะได้ retry ดึงข้อมูลใหม่ หากไม่ใส่ข้อมูลจะถูก SKIP ไปดึงข้อมูลรอบถัดไป
+    
 
 def _validate_data():
     with open(f"{DAG_FOLDER}/data.json", "r") as f:
         data = json.load(f)
-
-    assert data.get("status") != "fail"
+    val = data["data"]["current"]
+    
+    if not val["pollution"]["aqius"] > 0: # ค่า AQI ไม่ต่ำกว่า 0
+            raise AssertionError("ข้อมูล AQI ผิดพลาด")
+    if not 980 < val["weather"]["pr"] < 1050: # ค่าความกดอากาศไม่ต่ำกว่า 980 และไม่สูงกว่า 1050 ในระดับพื้นผิว
+            raise AssertionError("ข้อมูลความกดอากาศผิดพลาด")
+    if not 0 < val["weather"]["tp"] < 45: # ค่าอุณหภูมิอากาศของกรุงเทพไม่มีต่ำกว่า 0 และไม่มีสูงกว่า 45 (แต่อาจจะ)
+            raise AssertionError("ข้อมูลอุณหภูมิผิดพลาด")
+    if not 0 < val["weather"]["hu"] < 100 : # ค่าความชื้นไม่ต่ำกว่า 0 และไม่เกิน 100
+            raise AssertionError("ข้อมูลความชื้นผิดพลาด")
+    if not 0 < val["weather"]["wd"] < 360 : # ทิศทางลม หน่วยเป็นองศา ค่าอยู่ระหว่าง 0 - 360
+            raise AssertionError("ข้อมูลทิศทางลมผิดพลาด")
+    #จากทดลองรันแล้วไม่พบ API ที่มี status:success แต่ข้อมูลภายในมีค่าที่ผิดพลาด จึงเขียน code นี้เป็นตัวอย่างไปก่อน
 
 def _create_weather_table():
     pg_hook = PostgresHook(
@@ -54,34 +65,20 @@ def _create_weather_table():
 
     sql = """
     CREATE TABLE IF NOT EXISTS AQI (
-        date VARCHAR,
-        time VARCHAR,
+        date DATE NOT NULL,
+        time TIME NOT NULL,
         aqi NUMERIC NOT NULL,
-        temp NUMERIC NOT NULL,
+        temp NUMERIC,
         pressure NUMERIC,
         humidity NUMERIC,
-        wind_speed NUMERIC, 
-        wind_direction NUMERIC 
+        wind_speed NUMERIC,
+        wind_direction NUMERIC
     );
 """
+    # DAGS นี้เป็นการเก็บข้อมูล AQI จึงใส่ column AQI ให้เป็น NOT NULL
     cursor.execute(sql)
     connection.commit()
 
-
-import json
-from airflow.providers.postgres.hooks.postgres import PostgresHook
-from datetime import datetime
-
-def convert_date_string(date_string):
-    """แปลง date string 'YYYY-MM-DDTHH:MM:SS.000Z' เป็น 'DDMMYYYY'."""
-    dt_object = datetime.fromisoformat(date_string.replace("Z", "+00:00"))
-    return dt_object.strftime("%d%m%Y")
-
-def convert_to_1500(date_string):
-    """แปลง date string 'YYYY-MM-DDTHH:MM:SS.000Z' เป็น '1500' (UTC+7)."""
-    dt_object_utc = datetime.fromisoformat(date_string.replace("Z", "+00:00"))
-    dt_object_th = dt_object_utc + timedelta(hours=7)  # ปรับ time zone เป็น UTC+7
-    return dt_object_th.strftime("%H%M") # แปลงเป็น 1500
 
 def _load_data_to_postgres():
     pg_hook = PostgresHook(
@@ -94,10 +91,13 @@ def _load_data_to_postgres():
     with open(f"{DAG_FOLDER}/data.json", "r") as f:
         data = json.load(f)
 
-    date_raw = data["data"]["current"]["pollution"]["ts"]
-    date = convert_date_string(date_raw)
-    time_raw =  data["data"]["current"]["pollution"]["ts"]
-    time = convert_to_1500(time_raw)
+    timestamp_str = data["data"]["current"]["pollution"]["ts"]
+    utc_datetime = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
+    thai_timedelta = timedelta(hours=7) #แปลงเวลา UTC ให้เป็น LOCALTIME (Bangkok: +7)
+    thai_datetime = utc_datetime + thai_timedelta
+    # แปลง datetime เป็น date และ time object
+    record_date = thai_datetime.date()
+    record_time = thai_datetime.time()
     aqi = data["data"]["current"]["pollution"]["aqius"]
     temp = data["data"]["current"]["weather"]["tp"]
     pressure = data["data"]["current"]["weather"]["pr"]
@@ -105,12 +105,12 @@ def _load_data_to_postgres():
     wind_speed = data["data"]["current"]["weather"]["ws"]
     wind_direction = data["data"]["current"]["weather"]["wd"]
 
-    sql = f"""
-         INSERT INTO AQI (date, time, aqi, temp, pressure, humidity, wind_speed, wind_direction)
-         VALUES ({date},{time},{aqi},{temp},{pressure},{humidity},{wind_speed},{wind_direction});
+    sql = """
+        INSERT INTO AQI (date, time, aqi, temp, pressure, humidity, wind_speed, wind_direction)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
-   
-    cursor.execute(sql)
+
+    cursor.execute(sql, (record_date, record_time, aqi, temp, pressure, humidity, wind_speed, wind_direction))
     connection.commit()
 
 default_args = {
@@ -121,9 +121,9 @@ default_args = {
 with DAG(
     "AQI_DAGS",
     default_args=default_args,
-    schedule="25 * * * *",
+    schedule="25 * * * *",   # ให้ DAGS รันเก็บข้อมูลจาก API ทุกนาทีที่ 25 ของทุกชั่วโมง ที่ดึงข้อมูลช้าเนื่องจากลองดึงเวลาก่อนหน้าแล้วข้อมูลจะได้เป็นข้อมูลของชั่วโมงก่อนหน้า
     start_date=timezone.datetime(2025, 3, 24),
-    tags=["dpu"],
+    tags=["dpu","capstone"],
 ):
     start = EmptyOperator(task_id="start")
 
@@ -151,7 +151,7 @@ with DAG(
         task_id="send_email",
         to=["a.panklai2539@gmail.com"],
         subject="Finished getting open weather data",
-        html_content="หนูดึงข้อมูลเสร็จแล้วจ้า น้องAIRFLOW",
+        html_content = "DAGS AQI ดำเนินการดึงข้อมูลเรียบร้อย",
     )
 
     end = EmptyOperator(task_id="end")

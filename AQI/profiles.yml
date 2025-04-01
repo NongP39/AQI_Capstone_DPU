@@ -1,0 +1,21 @@
+AQI:
+  outputs:
+    dev:
+      dbname: capstone
+      host: localhost
+      pass: postgres
+      port: 5432
+      schema: dbt_nongp
+      threads: 1
+      type: postgres
+      user: postgres
+    production:
+      dbname: capstone
+      host: localhost
+      pass: postgres
+      port: 5432
+      schema: Production
+      threads: 1
+      type: postgres
+      user: postgres
+  target: dev

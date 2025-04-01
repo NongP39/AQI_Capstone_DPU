@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: AQI
+    database: capstone
+    schema: public
+    tables:
+      - name: aqi
