@@ -5,7 +5,7 @@ SELECT
     wind_direction
 FROM {{ref("avg_wind")}}
 WHERE 
-    time is null and
-    avg_wind_speed < 0 and
-    wind_direction_degrees < 0 and
+    time is null or
+    avg_wind_speed < 0 or
+    wind_direction_degrees < 0 or
     wind_direction_degrees > 360 

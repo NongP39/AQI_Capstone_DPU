@@ -40,3 +40,21 @@ models:
         description: ความชื้น
       - name: wind_speed
         description: ความเร็วลม
+  - name: avg_level_of_aqi
+    description: แสดงข้อมูลสรุปค่า AQI เฉลี่ยต่อวันและระดับคุณภาพอากาศ
+    columns:
+      - name: date
+        description: วันที่
+      - name: avg_aqi
+        description: ค่า AQI เฉลี่ยต่อวัน
+      - name: aqi_level
+        description: ระดับคุณภาพอากาศตามช่วงค่า AQI
+      - name: count
+        description: จำนวนข้อมูลในแต่ละวัน
+  - name: aqi_correlation
+    description: แสดงค่าความสัมพันธ์ระหว่าง AQI และตัวแปรอื่น (อุณหภูมิ,ความกดอากาศ,ความชื้น,ความเร็วลม,ทิศทางของกระแสลม)
+    columns:
+      - name: correlation_pair
+        description: ชื่อคู่ที่ใช้หาค่าความสัมพันธ์
+      - name: pearson_correlation
+        description: ค่าความสัมพันธ์ระหว่าง AQI และตัวแปรอื่น (อุณหภูมิ,ความกดอากาศ,ความชื้น,ความเร็วลม,ทิศทางของกระแสลม)
