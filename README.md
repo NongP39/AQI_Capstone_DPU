@@ -63,6 +63,7 @@
 ## Metabase (Dashboard)
 ได้ทำการเพิ่ม Metabase เข้าไปใน Docker เพื่อใช้ในการสร้าง Dashboard
 ### Code ที่เพิ่มเข้าไปใน Docker : compose.yml
+```
 metabase:
     image: metabase/metabase:latest
     ports:
