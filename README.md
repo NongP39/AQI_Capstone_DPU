@@ -74,4 +74,9 @@ $ dbt docs serve --port 9090
 # รัน DBT Tests
 $ dbt test
 ```
-
+## ⚠️ issue GITHUB
+```bash
+# ไม่สามารถ commit การเปลี่ยนแปลงจาก CodeSpace ได้ เนื่องจาก CodeSpace ของคุณยังไม่ได้รับข้อมูลการเปลี่ยนแปลงล่าสุดจาก origin/main
+$ git config pull.rebase false
+$ git pull origin main
+```
