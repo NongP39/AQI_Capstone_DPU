@@ -60,6 +60,25 @@
 มีการสร้าง Documentation ของ DBT ขึ้นมาเรียบร้อยแล้วโดยใช้คำสั่ง `dbt docs generate` \
 ซึ่งหากต้องการเปิดตั้ว Browser ของ DBT ให้ใช้คำสั่ง `dbt docs serve --port 9090`\
 ในส่วนของ Description ของ Model ต่างได้แก้ไขใน `_model.yml` ใน Folder : model ของ DBT เรียบร้อยแล้ว
+## Metabase (Dashboard)
+ได้ทำการเพิ่ม Metabase เข้าไปใน Docker เพื่อใช้ในการสร้าง Dashboard
+### Code ที่เพิ่มเข้าไปใน Docker : compose.yml
+metabase:
+    image: metabase/metabase:latest
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_TYPE: postgres # หรือประเภทฐานข้อมูลของคุณ
+      MB_DB_HOST: db        # หรือ Host ของฐานข้อมูลของคุณ
+      MB_DB_PORT: 5432      # หรือ Port ของฐานข้อมูลของคุณ
+      MB_DB_NAME: capstone  # ชื่อ Database
+      MB_DB_USER: postgres  # Username
+      MB_DB_PASS: postgres  # Password
+      MB_ADMIN_PASSWORD: metabase # Admin Password
+      MB_EMAIL_FROM_ADDRESS: a.panklai2539@gmail.com # E-mail ของผู้ใช้งาน
+    depends_on:
+      - db # ถ้า Metabase ต้องรอฐานข้อมูล
+```
 
 ## 🐳 Docker Command
 ```bash

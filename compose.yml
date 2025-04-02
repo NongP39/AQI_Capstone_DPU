@@ -290,6 +290,22 @@ services:
   #     airflow-init:
   #       condition: service_completed_successfully
 
+  metabase:
+    image: metabase/metabase:latest
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_TYPE: postgres # หรือประเภทฐานข้อมูลของคุณ
+      MB_DB_HOST: db        # หรือ Host ของฐานข้อมูลของคุณ
+      MB_DB_PORT: 5432      # หรือ Port ของฐานข้อมูลของคุณ
+      MB_DB_NAME: capstone
+      MB_DB_USER: postgres
+      MB_DB_PASS: postgres
+      MB_ADMIN_PASSWORD: metabase # ตั้งรหัสผ่านแอดมิน
+      MB_EMAIL_FROM_ADDRESS: a.panklai2539@gmail.com # (ไม่บังคับ)
+    depends_on:
+      - db # ถ้า Metabase ต้องรอฐานข้อมูล
+
   db:
     image: postgres
     volumes:
