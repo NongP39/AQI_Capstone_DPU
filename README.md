@@ -1,7 +1,13 @@
 # AQI_Capstone_DPU
 **Project Description**
-
-**AQI Data Pipeline** ในการดึงข้อมูลจาก **Air Visual** ด้วย Apache Airflow ผ่าน API แล้วนำข้อมูลที่ได้ไปเก็บไว้ในฐานข้อมูล PostgreSQL ซึ่ง Project นี้ เป็นต้นแบบที่จะนำไปต่อยอดในการทำระบบพยากรณ์คุณภาพอากาศในอนาคต
+<p align="center">
+  <img src="https://img.shields.io/badge/Airflow-v2.10.4-blue" alt="Airflow Version">
+  <img src="https://img.shields.io/badge/PostgreSQL-v14-green" alt="PostgreSQL Version">
+  <img src="https://img.shields.io/badge/DBT-v1.9.3-orange" alt="DBT Version">
+</p>
+<p align="center">
+   สร้างระบบ Data Pipeline ดึงข้อมูลคุณภาพอากาศจาก Air Visual API ด้วย Apache Airflow สู่ PostgreSQL และวิเคราะห์ข้อมูลด้วย DBT เพื่อการพยากรณ์คุณภาพอากาศในอนาคต! 
+</p>
 
 ## **ขั้นตอนการดึงข้อมูล**
 สร้าง DAGS และทำการรัน DAGS ไว้บน Apache Airflow เพื่อทำการดึงข้อมูลจาก Air Visual ผ่านทาง API ทุกนาทีที่ 25 ของทุกชั่วโมง
