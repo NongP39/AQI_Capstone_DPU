@@ -53,7 +53,6 @@
 เมื่อ**ตรวจสอบ/แก้ไข**ข้อมูลให้พร้อมที่จะนำไปใช้งานให้รันคำสั่ง `dbt run -t production`เพื่อดึงข้อมูลขึ้นไปบน Production
 
 
-
 ## ⚙️ DBT Setup
 ```bash
 # เปลี่ยน Directory ไปที่ Folder AQI
