@@ -1,5 +1,5 @@
-# AQI_Capstone_DPU
-**Project Description**
+<h1 align="center"> AQI Capstone Project: Real-time Air Quality Data Pipeline </h1>
+
 <p align="center">
   <img src="https://img.shields.io/badge/Airflow-v2.10.4-blue" alt="Airflow Version">
   <img src="https://img.shields.io/badge/PostgreSQL-v14-green" alt="PostgreSQL Version">
