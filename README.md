@@ -66,7 +66,7 @@
 ให้ไปที่ port แล้วทำการเปิด URL ใน port : 3000 ซึ่งจากการทดลองใช้งาน Metabase สามารถใช้งานได้เหมือนกับ adminer ทั้งหมด/
 และยังสามารถทำ dashboard ได้ด้วย และสามารถตั้งค่า Database syncing ได้ว่าจะดึงข้อมูลเป็นรายวันหรือรายชั่วโมง หากดึงข้อมูลมาแล้ว/
 ให้นำข้อมูลที่ได้มานั้นไปอัพเดทใน Dashboard เมื่อไรก็สามารถทำได้ **แนะนำ**
-![**Dashboard**](/workspaces/DPU_Capstone/Dashboard.png)
+![**Dashboard**](Dashboard.png)
 ### Code ที่เพิ่มเข้าไปใน Docker : compose.yml
 ```
 metabase:
