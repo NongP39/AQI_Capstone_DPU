@@ -1,15 +1,13 @@
 SELECT
-    date,
-    time,
+    timestamp,
     aqi,
     temp,
     pressure,
     humidity,
     wind_speed
-FROM {{ ref("high_aqi_top_5") }}
+FROM {{ ref("high_aqi_top_10") }}
 WHERE
-    date IS NULL
-    OR time IS NULL
+    timestamp IS NULL
     OR aqi < 0
     OR (temp < 0 OR temp > 45)
     OR (pressure < 980 OR pressure > 1050)

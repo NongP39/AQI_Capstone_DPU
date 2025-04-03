@@ -15,7 +15,7 @@ models:
   - name: avg_wind
     description: ตารางดูทิศทางกระแสลมเฉลี่ย และความเร็วลมเฉลี่ย (m/s) รายชั่วโมง
     columns:
-      - name: time
+      - name: hour
         description: ช่วงเวลาทุก 1 ชั่วโมง
       - name: avg_wind_speed
         description: ความเร็วลมเฉลี่ย (m/s)
@@ -26,10 +26,8 @@ models:
   - name: high_aqi_top_10
     description: ตารางแสดงข้อมูลที่มีค่าคุณภาพอากาศสูงที่่สุด 10 อันดับ
     columns:
-      - name: date
-        description: วัน
-      - name: time
-        description: เวลา
+      - name: timestamp
+        description: วันเวลาของข้อมูล
       - name: aqi
         description: ค่าคุณภาพอากาศ
       - name: temp
