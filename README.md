@@ -58,15 +58,17 @@
 - หากต้องการรัน Test Model ในส่วน Process ให้ใช้คำสั่ง `dbt test` เพื่อตรวจสอบข้อมูลใน **schema : dbt_nongp** ว่าไม่มีข้อมูลที่ผิดปกติ
 - หากต้องการรัน Test Model ในส่วน Production ให้ใช้คำสั่ง `dbt test -t production` เพื่อตรวจสอบข้อมูลใน **schema : Production** ว่าไม่มีข้อมูลที่ผิดปกติ
 ### DBT DOCS
-มีการสร้าง Documentation ของ DBT ขึ้นมาเรียบร้อยแล้วโดยใช้คำสั่ง `dbt docs generate` \
+มีการสร้าง Documentation ของ DBT ขึ้นมาเรียบร้อยแล้วโดยใช้คำสั่ง `dbt docs generate`\
 ซึ่งหากต้องการเปิดตั้ว Browser ของ DBT ให้ใช้คำสั่ง `dbt docs serve --port 9090`\
 ในส่วนของ Description ของ Model ต่างได้แก้ไขใน `_model.yml` ใน Folder : model ของ DBT เรียบร้อยแล้ว
 ## **Metabase (Dashboard)**
-ได้ทำการเพิ่ม Metabase เข้าไปใน Docker เพื่อใช้ในการสร้าง Dashboard หากต้องการเปิด  browser ในการใช้งาน Metabase/
-ให้ไปที่ port แล้วทำการเปิด URL ใน port : 3000 ซึ่งจากการทดลองใช้งาน Metabase สามารถใช้งานได้เหมือนกับ adminer ทั้งหมด/
-และยังสามารถทำ dashboard ได้ด้วย และสามารถตั้งค่า Database syncing ได้ว่าจะดึงข้อมูลเป็นรายวันหรือรายชั่วโมง หากดึงข้อมูลมาแล้ว/
-ให้นำข้อมูลที่ได้มานั้นไปอัพเดทใน Dashboard เมื่อไรก็สามารถทำได้ **แนะนำ**
+ได้ทำการเพิ่ม Metabase เข้าไปใน Docker เพื่อใช้ในการสร้าง Dashboard หากต้องการเปิด browser ในการใช้งาน Metabase\
+ให้ไปที่ port แล้วทำการเปิด URL ใน port : 3000 ซึ่งจากการทดลองใช้งาน Metabase สามารถใช้งานได้เหมือนกับ adminer ทั้งหมด\
+และยังสามารถทำ dashboard ได้ด้วย และสามารถตั้งค่า Database syncing ได้ว่าจะดึงข้อมูลเป็นรายวันหรือรายชั่วโมง หากดึงข้อมูลมาแล้ว\
+ให้นำข้อมูลที่ได้มานั้นไปอัพเดทใน Dashboard เมื่อไรก็สามารถทำได้ **แนะนำ**\
+
 ![**Dashboard**](Dashboard.png)
+
 ### Code ที่เพิ่มเข้าไปใน Docker : compose.yml
 ```
 metabase:
