@@ -65,8 +65,7 @@ def _create_weather_table():
 
     sql = """
     CREATE TABLE IF NOT EXISTS AQI (
-        date DATE NOT NULL,
-        time TIME NOT NULL,
+        timestamp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
         aqi NUMERIC NOT NULL,
         temp NUMERIC,
         pressure NUMERIC,
@@ -92,12 +91,9 @@ def _load_data_to_postgres():
         data = json.load(f)
 
     timestamp_str = data["data"]["current"]["pollution"]["ts"]
-    utc_datetime = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
-    thai_timedelta = timedelta(hours=7) #แปลงเวลา UTC ให้เป็น LOCALTIME (Bangkok: +7)
-    thai_datetime = utc_datetime + thai_timedelta
-    # แปลง datetime เป็น date และ time object
-    record_date = thai_datetime.date()
-    record_time = thai_datetime.time()
+    timestamp_utc = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+    thai_timedelta = timedelta(hours=7)
+    timestamp = timestamp_utc + thai_timedelta
     aqi = data["data"]["current"]["pollution"]["aqius"]
     temp = data["data"]["current"]["weather"]["tp"]
     pressure = data["data"]["current"]["weather"]["pr"]
@@ -106,11 +102,11 @@ def _load_data_to_postgres():
     wind_direction = data["data"]["current"]["weather"]["wd"]
 
     sql = """
-        INSERT INTO AQI (date, time, aqi, temp, pressure, humidity, wind_speed, wind_direction)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+        INSERT INTO AQI (timestamp, aqi, temp, pressure, humidity, wind_speed, wind_direction)
+        VALUES (%s, %s, %s, %s, %s, %s, %s);
     """
 
-    cursor.execute(sql, (record_date, record_time, aqi, temp, pressure, humidity, wind_speed, wind_direction))
+    cursor.execute(sql, (timestamp, aqi, temp, pressure, humidity, wind_speed, wind_direction))
     connection.commit()
 
 default_args = {

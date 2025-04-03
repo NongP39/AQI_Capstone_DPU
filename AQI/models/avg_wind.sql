@@ -1,5 +1,5 @@
 WITH winddirectioncategories AS (
-         SELECT aqi."time",
+         SELECT EXTRACT(HOUR FROM timestamp) AS hour,
             round(avg(aqi.wind_direction), 2) AS avg_wind_direction_degrees,
             round(avg(aqi.wind_speed), 2) AS avg_wind_speed,
                 CASE
@@ -14,12 +14,12 @@ WITH winddirectioncategories AS (
                     ELSE 'Unknown'::text
                 END AS wind_direction_cardinal
            FROM {{ source('AQI', 'aqi') }}
-          GROUP BY aqi."time"
+          GROUP BY EXTRACT(HOUR FROM timestamp)
         )
- SELECT "time",
+ SELECT hour,
     avg_wind_speed,
     avg_wind_direction_degrees AS wind_direction_degrees,
     wind_direction_cardinal AS wind_direction
     
    FROM winddirectioncategories
-  ORDER BY "time"
+  ORDER BY hour

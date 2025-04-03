@@ -23,8 +23,8 @@ models:
         description: ทิศทางกระแสลมเฉลี่ย (m/s)
       - name: wind_direction
         description: ทิศของกระแสลม (เข็มทิศ)
-  - name: high_aqi_top_5
-    description: ตารางแสดงข้อมูลที่มีค่าคุณภาพอากาศสูงที่่สุด 5 อันดับ
+  - name: high_aqi_top_10
+    description: ตารางแสดงข้อมูลที่มีค่าคุณภาพอากาศสูงที่่สุด 10 อันดับ
     columns:
       - name: date
         description: วัน

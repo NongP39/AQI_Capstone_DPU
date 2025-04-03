@@ -1,5 +1,4 @@
-SELECT date,
-    "time",
+SELECT timestamp,
     aqi,
     temp,
     pressure,
@@ -7,4 +6,4 @@ SELECT date,
     wind_speed
    FROM {{ source('AQI', 'aqi') }}
   ORDER BY aqi DESC
- LIMIT 5
+ LIMIT 10

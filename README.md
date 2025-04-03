@@ -33,7 +33,7 @@
 -  **wind_direction** : ทิศทางลม (องศา)
 
 ## ❓**Bussiness Questions**
-- วันและเวลาที่มีค่าคุณภาพอากาศสูงที่สุด 5 อันดับ (high_aqi_top_5)
+- วันและเวลาที่มีค่าคุณภาพอากาศสูงที่สุด 10 อันดับ (high_aqi_top_10)
 - ค่าคุณภาพอากาศ(เฉลี่ย,สูงสุด,ต่ำสุด) ตามช่วงเวลา (aqi_summary_by_time)
 - ทิศทางกระแสลมเฉลี่ย และความเร็วลมเฉลี่ย แบ่งตามช่วงเวลา (avg_wind)
 - คุณภาพอากาศเฉลี่ยต่อวัน พร้อมระดับผลกระทบต่อสุขภาพ (avg_level_of_aqi)
@@ -52,6 +52,7 @@
 มีการสร้าง Data Model  จำนวน 5 ตัว ตาม Bussiness Questions ไว้ในที่ `/workspaces/DPU_Capstone/AQI/models`
 - ซึ่งหากต้องการรัน Data Model ขึ้น Process ให้ใช้คำสั่ง `dbt run` เพื่อดึงข้อมูลเข้า **schema : dbt_nongp** 
 - หากต้องการรัน Data Model ขึ้น Production ให้ใช้คำสั่ง `dbt run -t production` เพื่อดึงข้อมูลเข้า **schema : Production** 
+**Note:select_all.sql เมื่อทำการรันด้วย `dbt run -t production` จะขึ้น Error เนื่องจากตั้งใจไม่ให้ Statement นี้ขึ้น Production**
 ### Test Data Model
 มีการสร้าง Test Model เพื่อ Test Data Model ทั้ง 5 ตัว ว่ารันข้อมูลถูกต้อง
 - หากต้องการรัน Test Model ในส่วน Process ให้ใช้คำสั่ง `dbt test` เพื่อตรวจสอบข้อมูลใน **schema : dbt_nongp** ว่าไม่มีข้อมูลที่ผิดปกติ
@@ -60,8 +61,11 @@
 มีการสร้าง Documentation ของ DBT ขึ้นมาเรียบร้อยแล้วโดยใช้คำสั่ง `dbt docs generate` \
 ซึ่งหากต้องการเปิดตั้ว Browser ของ DBT ให้ใช้คำสั่ง `dbt docs serve --port 9090`\
 ในส่วนของ Description ของ Model ต่างได้แก้ไขใน `_model.yml` ใน Folder : model ของ DBT เรียบร้อยแล้ว
-## Metabase (Dashboard)
-ได้ทำการเพิ่ม Metabase เข้าไปใน Docker เพื่อใช้ในการสร้าง Dashboard
+## **Metabase (Dashboard)**
+ได้ทำการเพิ่ม Metabase เข้าไปใน Docker เพื่อใช้ในการสร้าง Dashboard หากต้องการเปิด  browser ในการใช้งาน Metabase/
+ให้ไปที่ port แล้วทำการเปิด URL ใน port : 3000 ซึ่งจากการทดลองใช้งาน Metabase สามารถใช้งานได้เหมือนกับ adminer ทั้งหมด/
+และยังสามารถทำ dashboard ได้ด้วย และสามารถตั้งค่า Database syncing ได้ว่าจะดึงข้อมูลเป็นรายวันหรือรายชั่วโมง หากดึงข้อมูลมาแล้ว/
+ให้นำข้อมูลที่ได้มานั้นไปอัพเดทใน Dashboard เมื่อไรก็สามารถทำได้ **แนะนำ**
 ### Code ที่เพิ่มเข้าไปใน Docker : compose.yml
 ```
 metabase:

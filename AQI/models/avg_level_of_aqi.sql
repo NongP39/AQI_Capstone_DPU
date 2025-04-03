@@ -1,5 +1,5 @@
 SELECT
-    DATE(date) AS date,
+    DATE(timestamp) AS date,
     round(AVG(aqi),2) AS avg_aqi,
     CASE
         WHEN AVG(aqi) BETWEEN 0 AND 50 THEN 'Good'
@@ -14,6 +14,6 @@ SELECT
 FROM
     {{ source('AQI', 'aqi') }}
 GROUP BY
-    DATE(date)
+    DATE(timestamp)
 ORDER BY
-    DATE(date)
+    DATE(timestamp)
