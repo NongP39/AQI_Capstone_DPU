@@ -1,4 +1,4 @@
-<h1 align="center"> AQI Capstone Project: Real-time Air Quality Data Pipeline </h1>
+<h1 align="center"> AQI Capstone Project: Hourly Air Quality Data Pipeline </h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Airflow-v2.10.4-blue" alt="Airflow Version">
