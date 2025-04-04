@@ -1,0 +1,13 @@
+version: 2
+
+tests:
+  - name: test_aqi_summary_by_time
+    description: ตรวจสอบความถูกต้องของข้อมูลที่ได้จากการรัน Model:test_aqi_summary_by_time ซึ่งเป็นการสรุปค่าคุณภาพอากาศตามช่วงเวลาต่างๆ (เฉลี่ย, สูงสุด, ต่ำสุด)
+  - name: test_wind_direction
+    description: ตรวจสอบความถูกต้องของข้อมูลทิศทางลมที่ได้จากการรัน Model:test_wind_direction เพื่อให้มั่นใจว่าค่าอยู่ในช่วง 0-360 องศา
+  - name: test_top_10_avg_aqi_daily
+    description: ตรวจสอบความถูกต้องของข้อมูล 10 วันที่มีค่าคุณภาพอากาศเฉลี่ยสูงสุด ที่ได้จากการรัน Model:test_top_10_avg_aqi_daily
+  - name: test_level_of_aqi
+    description: ตรวจสอบความถูกต้องของการจัดระดับคุณภาพอากาศตามค่า AQI ที่ได้จากการรัน Model:test_level_of_aqi เพื่อให้มั่นใจว่าการแบ่งเกณฑ์ถูกต้องตามมาตรฐาน
+  - name: test_aqi_correlation
+    description: ตรวจสอบความถูกต้องของข้อมูลความสัมพันธ์ระหว่างค่าคุณภาพอากาศกับตัวแปรอื่นๆ ที่ได้จากการรัน Model:test_aqi_correlation เพื่อให้มั่นใจว่าการคำนวณความสัมพันธ์ถูกต้อง

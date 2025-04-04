@@ -12,43 +12,41 @@ models:
         description: ค่าคุณภาพอากาศต่ำที่สุดตามช่วงเวลานั้น
       - name: avg_aqi
         description: ค่าคุณภาพอากาศเฉลี่ยตามช่วงเวลานั้น
-  - name: avg_wind
-    description: ตารางดูทิศทางกระแสลมเฉลี่ย และความเร็วลมเฉลี่ย (m/s) รายชั่วโมง
-    columns:
-      - name: hour
-        description: ช่วงเวลาทุก 1 ชั่วโมง
-      - name: avg_wind_speed
-        description: ความเร็วลมเฉลี่ย (m/s)
-      - name: wind_direction_degrees
-        description: ทิศทางกระแสลมเฉลี่ย (m/s)
-      - name: wind_direction
-        description: ทิศของกระแสลม (เข็มทิศ)
-  - name: high_aqi_top_10
-    description: ตารางแสดงข้อมูลที่มีค่าคุณภาพอากาศสูงที่่สุด 10 อันดับ
+  - name: wind_direction
+    description: ตารางดูทิศทางกระแสลม และความเร็วลม (m/s) รายชั่วโมง
     columns:
       - name: timestamp
-        description: วันเวลาของข้อมูล
-      - name: aqi
-        description: ค่าคุณภาพอากาศ
-      - name: temp
-        description: อุณหภูมิ
-      - name: pressure
-        description: ความกดอากาศ
-      - name: humidity
-        description: ความชื้น
+        description: วันและเวลา
       - name: wind_speed
-        description: ความเร็วลม
-  - name: avg_level_of_aqi
-    description: แสดงข้อมูลสรุปค่า AQI เฉลี่ยต่อวันและระดับคุณภาพอากาศ
+        description: ความเร็วลม (m/s)
+      - name: wind_direction_degrees
+        description: ทิศทางกระแสลม (m/s)
+      - name: wind_direction
+        description: ทิศของกระแสลม (เข็มทิศ)
+  - name: top_10_avg_aqi_daily
+    description: ตารางแสดงข้อมูลที่มีค่าคุณภาพอากาศสูงที่่สุด 10 อันดับ
+    columns:
+      - name: date
+        description: วันเวลาของข้อมูล
+      - name: avg_aqi
+        description: คุณภาพอากาศเฉลี่ย
+      - name: avg_temp
+        description: อุณหภูมิเฉลี่ย
+      - name: avg_pressure
+        description: ความกดอากาศเฉลี่ย
+      - name: avg_humidity
+        description: ความชื้นเฉลี่ย
+      - name: avg_wind_speed
+        description: ความเร็วลมเฉลี่ย
+  - name: level_of_aqi
+    description: แสดงข้อมูลค่า AQI และระดับคุณภาพอากาศตามผลกระทบต่อสุขภาพ
     columns:
       - name: date
         description: วันที่
-      - name: avg_aqi
-        description: ค่า AQI เฉลี่ยต่อวัน
+      - name: aqi
+        description: ค่า AQI 
       - name: aqi_level
         description: ระดับคุณภาพอากาศตามช่วงค่า AQI
-      - name: count
-        description: จำนวนข้อมูลในแต่ละวัน
   - name: aqi_correlation
     description: แสดงค่าความสัมพันธ์ระหว่าง AQI และตัวแปรอื่น (อุณหภูมิ,ความกดอากาศ,ความชื้น,ความเร็วลม,ทิศทางของกระแสลม)
     columns:
@@ -56,3 +54,11 @@ models:
         description: ชื่อคู่ที่ใช้หาค่าความสัมพันธ์
       - name: pearson_correlation
         description: ค่าความสัมพันธ์ระหว่าง AQI และตัวแปรอื่น (อุณหภูมิ,ความกดอากาศ,ความชื้น,ความเร็วลม,ทิศทางของกระแสลม)
+  - name: select_all
+    description: ใช้สำหรับดึงข้อมูลจาก Public ขึ้น process
+    
+  
+
+
+
+        

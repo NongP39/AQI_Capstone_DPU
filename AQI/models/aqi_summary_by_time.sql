@@ -18,3 +18,4 @@ SELECT
             WHEN ((EXTRACT(hour FROM timestamp) >= (18)::numeric) AND (EXTRACT(hour FROM  timestamp) < (24)::numeric)) THEN '18:00-23:59'::text
             ELSE 'ไม่ระบุ'::text
         END
+  order by time_group

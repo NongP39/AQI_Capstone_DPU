@@ -1,11 +1,11 @@
 SELECT
-    hour,
-    avg_wind_speed,
+    timestamp,
+    wind_speed,
     wind_direction_degrees,
     wind_direction
-FROM {{ref("avg_wind")}}
+FROM {{ref("wind_direction")}}
 WHERE 
-    hour is null or
-    avg_wind_speed < 0 or
+    timestamp is null or
+    wind_speed < 0 or
     wind_direction_degrees < 0 or
     wind_direction_degrees > 360 
